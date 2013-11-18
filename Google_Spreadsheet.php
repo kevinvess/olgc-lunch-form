@@ -25,6 +25,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
+// Increase memory limit
+ini_set('memory_limit', '128M');
+
 class Google_Spreadsheet
 {
 	private $client;
@@ -206,6 +209,63 @@ class Google_Spreadsheet
 		}
 
 		return $data;
+	}
+
+	// custom function for OLGC lunch form
+	function getPaypalData($uid, $total, $data) {
+		$paypal_fields = array(
+			0 => 'cmd',
+			1 => 'charset',
+			2 => 'rm',
+			3 => 'business',
+			4 => 'item_name',
+			5 => 'cbt'
+		);
+		$paypal_data = Array();
+		foreach($paypal_fields as $key) {
+			$paypal_data[$key] = $data[$key];
+		}
+		
+		$paypal_data['amount'] = substr($total, 1);
+		$paypal_data['return'] = "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'] . "?uid=$uid";
+		$paypal_data['notify_url'] = "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'] . "?uid=$uid";
+		
+		$result = "?return=" . $paypal_data['return'];
+		foreach($paypal_data as $key => $value) {
+			$result .= "&$key=$value";
+		}
+		return $result;
+	}
+
+	// custom function for OLGC lunch form
+	function goToPaypal($uid, $total, $data)
+	{
+		$relevant_data = $this->getPaypalData($uid, $total, $data);
+		header('Location: ' . "https://www.paypal.com/cgi-bin/webscr" . $relevant_data);
+	}
+
+	// custom function for OLGC lunch form
+	function hasPaid($id, $is_free)
+	{
+		$row = $this->getRows('id='.$id);
+		return ($row['paid'] != "no");
+	}
+
+	// custom function for OLGC lunch form
+	function updatePaid($id, $is_free)
+	{
+		$rows = $this->getRows('id='.$id);
+		$update;
+		
+		if ($is_free)
+			$update['paid'] = 'teacher lunch';
+		else
+			$update['paid'] = 'yes';
+
+		$this->updateRow($update, 'id='.$id);
+
+		if ($rows) return $rows;
+		else echo "Error, unable to get spreadsheet data";
 	}
 
 	private function login($user,$pass)
