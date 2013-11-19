@@ -34,9 +34,10 @@ function calculateMenus(form) {
                     var extraID = $(this).attr('id').match(/\d+$/)[0];
                     if(extraID === mealID) {
                         $(this).prop('disabled', false);
-                        extraCount = parseFloat(extra.val());
+                        extraCount = parseFloat($(this).val());
                     } else {
                         $(this).prop('disabled', true);
+                        $(this).val('0');
                     }
                 });
             } else {
