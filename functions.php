@@ -21,7 +21,7 @@ $menus = array(
                 'type' => 'number'
             ),
             array(
-                'name' => 'Extra Sandwich',
+                'name' => 'Extra Sandwich(es)',
                 'slug' => 'extra-sandwiches',
                 'price' => '2.00',
                 'type' => 'number'
@@ -277,9 +277,15 @@ function get_receipt($menus, $order, $free = false) {
         $i++;
         $meal = $order[0]['menu-'.$i.'-meal'];
         if($meal != '') {
-            $output .= '<strong>' . $menu['title'] . ' Meal:</strong><br>';
+            $output .= '<strong>' . $menu['title'] . ' Meal</strong><br>';
             $output .= $tab . $meal . ' <em>($'.$menu['fields'][0]['price'].' ea. x '.count($menu['days']).' days)</em><br>';
             // --extras
+            foreach ($order[0] as $key => $value) {
+                $exp_key = explode('-', $key);
+                if($exp_key[2] == 'extra' && $exp_key[1] == $i && $value != ''){
+                    $output .= $tab . $value . ' ' . $menu['fields'][1]['name'] . ' <em>($'.$menu['fields'][1]['price'].' ea. x '.count($menu['days']).' days)</em><br>';
+                }
+            }
             $output .= $tab . '<strong>Vendor Total: <span style="float:right">' . $order[0]['menu-'.$i.'-total'] . '</span></strong><br><br>';
         }
     }
