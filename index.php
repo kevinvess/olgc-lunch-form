@@ -74,27 +74,29 @@ if($success) {
         // Update Google Spreadsheet
         $ss = new Google_Spreadsheet($google_username,$google_password);
         $ss->useSpreadsheet($spreadsheet);
-        $user_paid = $ss->hasPaid($uniqueID);
         if ($free == 'true')
             $receipt = $ss->updatePaid($uniqueID, true);
         else
             $receipt = $ss->updatePaid($uniqueID, false);
 
+        $user_paid = $ss->hasPaid($uniqueID);
+
         // Thank you message & receipt
         $msg = get_receipt($menus, $receipt, $free);
 
         // Send Emails
-        if (!$user_paid) {
-            $headers = 'From: ' . 'no-reply@' . $_SERVER['HTTP_HOST'];
-            $fullname = $receipt['user-first-name'] . " " . $receipt['user-last-name'];
+        if ($user_paid) {
+            $headers = 'From: ' . 'no-reply@' . $_SERVER['HTTP_HOST'] . "\r\n";
+            $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+            $fullname = $receipt[0]['user-first-name'] . " " . $receipt[0]['user-last-name'];
 
             // Email Receipt
-            $email_msg = strip_tags($msg);
-            $email_msg = str_replace(array("&nbsp;", ", a copy of this receipt will be emailed to you"), array(" ", ""), $email_msg);
-            mail($receipt['user-email'], 'Hot Lunch Order Receipt', $email_msg, $headers);
+            $email_msg = $msg;
+            $email_msg = str_replace(array(", a copy of this receipt will be emailed to you"), array(""), $email_msg);
+            mail($receipt[0]['user-email'], 'Hot Lunch Order Receipt', $email_msg, $headers);
 
             // Send Admin Notification(s)
-            $alert_msg = 'This is an alert that ' . $fullname . ' has placed an order for lunch.  The total price of the order was ' . $receipt['total'] . '.  Please check the spreadsheet for the order details. \r\n \r\n Order Number: ' . $receipt_array['id'];
+            $alert_msg = 'This is an alert that ' . $fullname . ' has placed an order for lunch.  The total price of the order was ' . $receipt[0]['total'] . '. <br><br> Please check the spreadsheet for the order details. <br><br> Order Number: ' . $uniqueID;
             foreach ($organizers as $organizer) {
                 mail($organizer['name'].' <'.$organizer['email'].'>', 'Hot Lunch Order Alert', $alert_msg, $headers);
             }

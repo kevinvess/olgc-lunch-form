@@ -245,10 +245,10 @@ class Google_Spreadsheet
 	}
 
 	// custom function for OLGC lunch form
-	function hasPaid($id, $is_free)
+	function hasPaid($id)
 	{
 		$row = $this->getRows('id='.$id);
-		return ($row['paid'] != "no");
+		return ($row[0]['paid'] != "no");
 	}
 
 	// custom function for OLGC lunch form
