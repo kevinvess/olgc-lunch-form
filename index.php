@@ -121,6 +121,7 @@ if($success) {
     <link rel="icon" type="image/png" href="http://www.olgcschool.org/favicon.ico">
 
     <!--Stylesheets-->
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/flick/jquery-ui.css">
     <link rel="stylesheet" href="css/all.css">
 
     <!-- All JavaScript at the bottom, except for Modernizr / Respond.
@@ -229,6 +230,9 @@ if($success) {
     <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+
+    <!-- Grab Google CDN's jQuery UI, with a protocol relative URL -->
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
 
     <script src="js/main.js" type="text/javascript"></script>
 

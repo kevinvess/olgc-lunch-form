@@ -250,6 +250,57 @@ $(document).ready(function(){
         addClassFocus: "focus",
         filterClass: "readonly"
     });
+
+    // Teachers autocomplete
+    $(function() {
+        var options = [
+          "Lynn Barker",
+          "Janet Berney",
+          "Rose Marie Blatnik",
+          "Cynthia Boyce",
+          "Claire Braeuer",
+          "Mary Briody",
+          "Ashley Carney",
+          "Beverly Colson",
+          "Ellen Coney",
+          "Kathleen Cutonilli",
+          "Samantha Forbes",
+          "Anne Francese",
+          "Dawn Gartner",
+          "Marietta Grundlehner",
+          "Carolyn Holden",
+          "Steven Hom",
+          "Cynthia Iannone",
+          "Adrianne Jewett",
+          "Wendy Kehoe",
+          "Carleen Knauf",
+          "Eva McCleary",
+          "Phillip McDonald",
+          "Michele McNiff",
+          "Amanda Miller",
+          "Blanca Munguia",
+          "Anne Nelson",
+          "Austin Poole",
+          "Karen Pubal",
+          "Andrew Raab",
+          "Heather Richards",
+          "Anne Saied",
+          "Kimberly Simmons-Le",
+          "Carolyn Skrable",
+          "Carrie Sudduth",
+          "Beth Sussman",
+          "Valerie Taylor",
+          "Pamela Valleskey",
+          "Maria Vivanco",
+          "David Weimer",
+          "Robin Williams",
+          "Irene Zaso"
+        ];
+        $('#OrderForm #teacher').autocomplete({
+          source: options
+        });
+    });
+
     calculateMenus('#OrderForm');
     validateForm('#OrderForm');
 });
