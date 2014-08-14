@@ -133,7 +133,7 @@ if($success) {
     <div class="wrapper">
         <h1 class="logo"><a href="http://www.olgcschool.org/">Our Lady of Good Counsel School</a></h1>
         
-        <h2>2013-2014 Hot Lunch Order Form – <strong>Due Friday, September 13</strong></h2>
+        <h2>2014-2015 Hot Lunch Order Form – <strong>Due Sunday, September 7</strong></h2>
         
         <?php
         if(!empty($msg))
@@ -141,13 +141,13 @@ if($success) {
         else {
         ?>
 
-        <p>Welcome back to another school year! The Hot Lunch Committee will again be offering lunches on Thursdays throughout the year from our five great vendors: Chick-fil-A, Ledo's Pasta, Panera, Church Street Pizza, and Baja Fresh.</p>
+        <p>Welcome back to another school year! The Hot Lunch Committee will again be offering lunches on Thursdays throughout the year from our five great vendors: Chick-fil-A, Ledo's Pasta, Sweet Leaf, Church Street Pizza, and Baja Fresh.</p>
         <p><strong>Payment:</strong> Lunches must be ordered online and paid with either credit or debit card. No paper orders or checks will be accepted through the school office.</p>
         <p>Orders are processed through PayPal BUT a <strong>PayPal account is NOT needed</strong>. Just choose the <strong>"Don't have a PayPal Account?"</strong> option to pay with a credit card. Also, if a Security Warning pop-up appears, please click Continue to complete your secure transaction.</p>
         <p>Instructions for purchasing lunch:</p>
         <ul>
             <li>Complete an individual order form including payment for each child. Separate payments ensure a detailed receipt for each order. After payment is complete and order is successfully processed, confirmation will be sent to your email.</li>
-            <li>Lunches are ordered for the entire 2013-2014 school year.</li>
+            <li>Lunches are ordered for the entire 2014-2015 school year.</li>
             <li>When purchasing lunch from a particular vendor, you must order the same meal each day that vendor serves lunch.</li>
         </ul>
         <p>Questions? Contact <?php echo get_organizers($organizers); ?></p>

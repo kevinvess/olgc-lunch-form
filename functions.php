@@ -4,7 +4,7 @@ $menus = array(
     'menu-1' => array(
         'title' => 'Chick-Fil-A',
         'description' => 'Each meal includes fruit, carrots, and choice of chips OR dessert.',
-        'days' => array('9/19', '10/24', '12/5', '1/23', '2/27', '4/3', '5/22'),
+        'days' => array('9/25', '10/30', '12/11', '1/29', '3/5', '4/23', '5/28'),
         'note' => '<strong>Health Note:</strong><br>Chick-Fil-A meals are cooked in 100% fully refined peanut oil that is cholesterol and trans fat free. Additional nutritional information can be found at: <a href="http://www.chick-fil-a.com/Documents/AllergenReference" target="_blank">www.chick-fil-a.com/Documents/AllergenReference</a>',
         'fields' => array(
             array(
@@ -31,31 +31,31 @@ $menus = array(
     'menu-2' => array(
         'title' => 'Ledo\'s Penne Pasta',
         'description' => 'The meal includes penne pasta with Ledo marinara sauce, warm garlic bread and a salad bar with homemade dressings.',
-        'days' => array('9/26', '10/31', '12/12', '1/30', '3/6', '4/10', '5/29'),
+        'days' => array('10/2', '11/6', '12/18', '2/5', '3/12', '4/30', '6/4'),
         'fields' => array(
             array(
                 'name' => 'Single Pasta Meal',
                 'slug' => 'meal',
-                'price' => '5.00',
+                'price' => '6.00',
                 'type' => 'checkbox'
             )
         )
     ),
     'menu-3' => array(
-        'title' => 'Panera',
+        'title' => 'Sweet Leaf',
         'description' => 'Each meal includes a sandwich with yogurt tube, fruit, carrots, and choice of chips OR dessert.',
-        'days' => array('10/3', '11/7', '12/19', '2/6', '3/13', '5/1', '6/5'),
+        'days' => array('10/9', '11/13', '1/8', '2/12', '3/19', '5/7'),
         'fields' => array(
             array(
                 'name' => 'Type of Meal',
                 'slug' => 'meal',
-                'price' => '5.00',
+                'price' => '6.00',
                 'type' => 'radio',
-                'options' => array('Ham & Cheese Sub', 'Turkey & Cheese Sub')
+                'options' => array('Ham & Cheese Sandwich', 'Turkey & Cheese Sandwich')
             ),
             array(
                 'name' => 'Extra 6-inch Sandwich(es)',
-                'slug' => 'extra-subs',
+                'slug' => 'extra-sandwiches',
                 'price' => '2.00',
                 'type' => 'number'
             )
@@ -64,7 +64,7 @@ $menus = array(
     'menu-4' => array(
         'title' => 'Church Street Pizza',
         'description' => 'Each meal includes one slice of New York style pizza with fruit, carrots, and choice of chips OR dessert.',
-        'days' => array('10/10', '11/14', '1/9', '2/13', '3/20', '5/8'),
+        'days' => array('9/11', '10/16', '11/20', '1/15', '2/19', '3/26', '5/14'),
         'fields' => array(
             array(
                 'name' => 'Single Slice Meal',
@@ -83,7 +83,7 @@ $menus = array(
     'menu-5' => array(
         'title' => 'Baja Fresh',
         'description' => 'Each meal includes one quesadilla with rice, tortilla chips & salsa, and applesauce.',
-        'days' => array('10/17', '11/21', '1/16', '2/20', '3/27', '5/15'),
+        'days' => array('9/18', '10/23', '12/4', '1/22', '2/26', '4/16', '5/21'),
         'fields' => array(
             array(
                 'name' => 'Type of Meal',
