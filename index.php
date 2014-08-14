@@ -96,7 +96,7 @@ if($success) {
             mail($receipt[0]['user-email'], 'Hot Lunch Order Receipt', $email_msg, $headers);
 
             // Send Admin Notification(s)
-            $alert_msg = 'This is an alert that ' . $fullname . ' has placed an order for lunch.  The total price of the order was ' . $receipt[0]['total'] . '. <br><br> Please check the spreadsheet for the order details. <br><br> Order Number: ' . $uniqueID;
+            $alert_msg = 'This is an alert that ' . $fullname . ' has placed an order for lunch.  The total price of the order was ' . $receipt[0]['total'] . '. <br><br> Please check the spreadsheet for the order details. <br><br> Order Number: <a href="http://'.$_SERVER['HTTP_HOST'].'/?uid='.$uniqueID.'">' . $uniqueID . '</a>';
             foreach ($organizers as $organizer) {
                 mail($organizer['name'].' <'.$organizer['email'].'>', 'Hot Lunch Order Alert', $alert_msg, $headers);
             }
