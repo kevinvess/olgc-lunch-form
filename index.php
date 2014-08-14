@@ -28,7 +28,7 @@ $organizers = array(
 // Form settings
 $send = isset($_GET['submit']);
 $success = isset($_REQUEST['success']) || isset($_REQUEST['uid']);
-$free = $_GET['key'];
+$free = isset($_GET['olgcfreelunch']);
 $msg = '';
 
 // Send to PayPal
@@ -66,7 +66,7 @@ if($send) {
 if($success) {
     // Get form data
     $uniqueID = $_REQUEST['uid'];
-    $free = $_GET['freelunch'];
+    $freelunch = $_GET['freelunch'];
 
     // Validation
     if (!empty($uniqueID)) {
@@ -74,7 +74,7 @@ if($success) {
         // Update Google Spreadsheet
         $ss = new Google_Spreadsheet($google_username,$google_password);
         $ss->useSpreadsheet($spreadsheet);
-        if ($free == 'true')
+        if ($freelunch == 'true')
             $receipt = $ss->updatePaid($uniqueID, true);
         else
             $receipt = $ss->updatePaid($uniqueID, false);
@@ -82,7 +82,7 @@ if($success) {
         $user_paid = $ss->hasPaid($uniqueID);
 
         // Thank you message & receipt
-        $msg = get_receipt($menus, $receipt, $free);
+        $msg = get_receipt($menus, $receipt, $freelunch);
 
         // Send Emails
         if ($user_paid) {
@@ -154,14 +154,14 @@ if($success) {
         <form id="OrderForm" action="?submit" method="post">
             <input type="hidden" name="cmd" value="_xclick">
             <input type="hidden" name="charset" value="utf-8">
-            <input type="hidden" name="key" value="<?=$_GET['key'];?>">
+            <input type="hidden" name="key" value="<?=($free) ? 'olgcfreelunch' : '';?>">
             <input type="hidden" name="rm" value="2">
             <input type="hidden" name="cbt" value="COMPLETE YOUR LUNCH ORDER">
             <input type="hidden" name="business" value="auction@olgcva.org">
             <input type="hidden" name="item_name" value="OLGC Hot Lunch">
             <input id="purchaseAmount" type="hidden" name="amount" value="0">
 
-            <h3><?=($teacher == "olgcfreelunch") ? "Faculty/Staff" : "Student";?> Information</h3>
+            <h3><?=($free) ? "Faculty/Staff" : "Student";?> Information</h3>
             <div class="section info">
                 <div>
                     <label for="first_name">First Name:</label>
@@ -170,7 +170,7 @@ if($success) {
                     <label for="last_name">Last Name:</label>
                     <input type="text" id="last-name" name="order[user][last-name]" value="" class="required">
                     
-                    <?php if($free != "olgcfreelunch") { ?>
+                    <?php if(!$free) { ?>
 
                     <label for="teacher">Teacher:</label>
                     <input type="text" id="teacher" name="order[user][teacher]" value="" class="required">
@@ -198,7 +198,7 @@ if($success) {
                     <input type="text" id="order-total" name="order[total]" value="$0.00" readonly="readonly" class="readonly">
                 </div>
                 <div style="text-align:right;">
-                    <?php if($free == "olgcfreelunch") { ?>
+                    <?php if($free) { ?>
 
                     <br /><input id="submit" type="submit" name="submit" value="Submit Order" class="button">
                     <?php } else { ?>
@@ -221,7 +221,7 @@ if($success) {
     <div class="processing">
         <div>
             <h1>Your order is being processed, this might take a few minutes.</h1>
-            <?=($free != "olgcfreelunch") ? "<p>You will be directed to PayPal to pay for your order, please be sure to click the link to return to this site to complete your order.</p>" : "";?>
+            <?=(!$free) ? "<p>You will be directed to PayPal to pay for your order, please be sure to click the link to return to this site to complete your order.</p>" : "";?>
         </div>
     </div>
     <?php } ?>
