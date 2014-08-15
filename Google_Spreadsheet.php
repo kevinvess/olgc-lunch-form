@@ -25,9 +25,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-// Increase memory limit
-ini_set('memory_limit', '128M');
-
 class Google_Spreadsheet
 {
 	private $client;

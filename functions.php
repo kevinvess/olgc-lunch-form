@@ -1,106 +1,110 @@
 <?php
-// Menu Settings
-$menus = array(
-    'menu-1' => array(
-        'title' => 'Chick-Fil-A',
-        'description' => 'Each meal includes fruit, carrots, and choice of chips OR dessert.',
-        'days' => array('9/25', '10/30', '12/11', '1/29', '3/5', '4/23', '5/28'),
-        'note' => '<strong>Health Note:</strong><br>Chick-Fil-A meals are cooked in 100% fully refined peanut oil that is cholesterol and trans fat free. Additional nutritional information can be found at: <a href="http://www.chick-fil-a.com/Documents/AllergenReference" target="_blank">www.chick-fil-a.com/Documents/AllergenReference</a>',
-        'fields' => array(
-            array(
-                'name' => 'Type of Meal',
-                'slug' => 'meal',
-                'price' => '5.00',
-                'type' => 'radio',
-                'options' => array('Nuggets Meal', 'Sandwich Meal')
-            ),
-            array(
-                'name' => 'Extra Nuggets',
-                'slug' => 'extra-nuggets',
-                'price' => '2.00',
-                'type' => 'number'
-            ),
-            array(
-                'name' => 'Extra Sandwich(es)',
-                'slug' => 'extra-sandwiches',
-                'price' => '2.00',
-                'type' => 'number'
-            )
-        )
-    ),
-    'menu-2' => array(
-        'title' => 'Ledo\'s Penne Pasta',
-        'description' => 'The meal includes penne pasta with Ledo marinara sauce, warm garlic bread and a salad bar with homemade dressings.',
-        'days' => array('10/2', '11/6', '12/18', '2/5', '3/12', '4/30', '6/4'),
-        'fields' => array(
-            array(
-                'name' => 'Single Pasta Meal',
-                'slug' => 'meal',
-                'price' => '6.00',
-                'type' => 'checkbox'
-            )
-        )
-    ),
-    'menu-3' => array(
-        'title' => 'Sweet Leaf',
-        'description' => 'Each meal includes a sandwich with yogurt tube, fruit, carrots, and choice of chips OR dessert.',
-        'days' => array('10/9', '11/13', '1/8', '2/12', '3/19', '5/7'),
-        'fields' => array(
-            array(
-                'name' => 'Type of Meal',
-                'slug' => 'meal',
-                'price' => '6.00',
-                'type' => 'radio',
-                'options' => array('Ham & Cheese Sandwich', 'Turkey & Cheese Sandwich')
-            ),
-            array(
-                'name' => 'Extra 6-inch Sandwich(es)',
-                'slug' => 'extra-sandwiches',
-                'price' => '2.00',
-                'type' => 'number'
-            )
-        )
-    ),
-    'menu-4' => array(
-        'title' => 'Church Street Pizza',
-        'description' => 'Each meal includes one slice of New York style pizza with fruit, carrots, and choice of chips OR dessert.',
-        'days' => array('9/11', '10/16', '11/20', '1/15', '2/19', '3/26', '5/14'),
-        'fields' => array(
-            array(
-                'name' => 'Single Slice Meal',
-                'slug' => 'meal',
-                'price' => '5.00',
-                'type' => 'checkbox'
-            ),
-            array(
-                'name' => 'Extra Slice(s)',
-                'slug' => 'extra-slices',
-                'price' => '1.00',
-                'type' => 'number'
-            )
-        )
-    ),
-    'menu-5' => array(
-        'title' => 'Baja Fresh',
-        'description' => 'Each meal includes one quesadilla with rice, tortilla chips & salsa, and applesauce.',
-        'days' => array('9/18', '10/23', '12/4', '1/22', '2/26', '4/16', '5/21'),
-        'fields' => array(
-            array(
-                'name' => 'Type of Meal',
-                'slug' => 'meal',
-                'price' => '5.00',
-                'type' => 'radio',
-                'options' => array('Cheese Quesadilla Meal', 'Chicken Quesadilla Meal')
-            ),
-            array(
-                'name' => 'Extra Quesadilla(s)',
-                'slug' => 'extra-quesadillas',
-                'price' => '1.00',
-                'type' => 'number'
-            )
-        )
-    )
-);
+/**
+ * Functions and definitions
+ *
+ * Sets up the form and provides some helper functions.
+ *
+ * @package OLGC
+ * @subpackage HotLunch
+ * @since HotLunch 2.0
+ */
+
+// Increase memory limit
+ini_set('memory_limit', '128M');
+
+// Include Google_Spreadsheet class
+require_once('Google_Spreadsheet.php');
+
+/**
+ * Form Setup
+ *
+ * Configure the page content depending on which stage
+ * of the order process the user is currently in.
+ *
+ * @since HotLunch 2.1
+ */
+
+$send = isset($_GET['submit']);
+$success = isset($_REQUEST['success']) || isset($_REQUEST['uid']);
+$free = isset($_GET['olgcfreelunch']);
+$msg = '';
+
+// Send to PayPal
+if($send) {
+    // Get form data
+    $order = $_POST['order'];
+
+    // Special hidden fields
+    $spam = stripslashes( $_POST['subject'] ); // SPAM Blocker
+    $ip = $_SERVER['REMOTE_ADDR']; // Get Users IP Address
+
+    // Validation
+    if ($spam)
+        $msg = '<p class="error">Uh oh, you have been considered SPAM. If you are not SPAM please email ' . get_organizers($organizers) . '</p>';
+    elseif (!empty($order[user][email])) {
+        // Format data for spreadsheet
+        $ss_order = get_orderArray($_POST);
+
+        // Process Order
+        $ss = new Google_Spreadsheet($google_username,$google_password);
+        $ss->useSpreadsheet($spreadsheet);
+        if ($ss->addRow($ss_order)) {
+            // Successful spreadsheet entry
+            if ($_POST['key'] == 'olgcfreelunch')
+                header('Location: ' . $_SERVER['PHP_SELF'] . '?uid=' . $ss_order['id'] . "&freelunch=true&email=true");
+            else
+                $ss->goToPaypal($ss_order['id'], $ss_order['total'], $_POST);
+        }
+    }
+    else
+        $msg = '<p class="error">Hmm... we couldn\'t process your order, please try again or send an email to ' . get_organizers($organizers) . '</p>';
+}
+
+// Return from PayPal
+if($success) {
+    // Get form data
+    $uniqueID = $_REQUEST['uid'];
+    $freelunch = $_GET['freelunch'];
+    $sendEmail = $_GET['email'];
+
+    // Validation
+    if (!empty($uniqueID)) {
+
+        // Update Google Spreadsheet
+        $ss = new Google_Spreadsheet($google_username,$google_password);
+        $ss->useSpreadsheet($spreadsheet);
+        if ($freelunch == 'true')
+            $receipt = $ss->updatePaid($uniqueID, true);
+        else
+            $receipt = $ss->updatePaid($uniqueID, false);
+
+        $user_paid = $ss->hasPaid($uniqueID);
+
+        // Thank you message & receipt
+        $msg = get_receipt($menus, $receipt, $freelunch);
+
+        // Send Emails
+        if ($user_paid && $sendEmail == 'true') {
+            $headers = 'From: ' . 'no-reply@' . $_SERVER['HTTP_HOST'] . "\r\n";
+            $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+            $fullname = $receipt[0]['user-first-name'] . " " . $receipt[0]['user-last-name'];
+
+            // Email Receipt
+            $email_msg = $msg;
+            $email_msg = str_replace(array(", a copy of this receipt will be emailed to you"), array(""), $email_msg);
+            mail($receipt[0]['user-email'], 'Hot Lunch Order Receipt', $email_msg, $headers);
+
+            // Send Admin Notification(s)
+            $alert_msg = 'This is an alert that ' . $fullname . ' has placed an order for lunch.  The total price of the order was ' . $receipt[0]['total'] . '. <br><br> Please check the spreadsheet for the order details. <br><br> Order Number: <a href="http://'.$_SERVER['HTTP_HOST'].'/?uid='.$uniqueID.'">' . $uniqueID . '</a>';
+            foreach ($organizers as $organizer) {
+                mail($organizer['name'].' <'.$organizer['email'].'>', 'Hot Lunch Order Alert', $alert_msg, $headers);
+            }
+        }
+    }
+    else
+        header('Location: ' . $_SERVER['PHP_SELF']);
+}
+// end; Form Setup
 
 /**
  * Displays a list of the adminstrators who should be contacted,
