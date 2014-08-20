@@ -267,7 +267,7 @@ function get_receipt($menus, $order, $free = false) {
     $output = '<p>Thank You! Below is your order, a copy of this receipt will be emailed to you:</p>
         <h3>Your Information</h3>
         <p class="success">
-            <strong>Name:</strong> ' . $fullname . '<br />';
+            <strong>Name:</strong> ' . stripslashes($fullname) . '<br />';
     $output .= ($free == true) ? '' : '<strong>Teacher:</strong> ' . $order[0]['user-teacher'] . '<br />';
     $output .= '
             <strong>Room:</strong> ' . $order[0]['user-room'] . ' <br />
