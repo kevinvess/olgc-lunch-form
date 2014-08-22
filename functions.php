@@ -51,7 +51,7 @@ if($send) {
         if ($ss->addRow($ss_order)) {
             // Successful spreadsheet entry
             if ($_POST['key'] == 'olgcfreelunch')
-                header('Location: ' . $_SERVER['PHP_SELF'] . '?uid=' . $ss_order['id'] . "&freelunch=true&em=true");
+                header('Location: ' . $_SERVER['PHP_SELF'] . '?uid=' . $ss_order['id'] . "&freelunch=true&sendemail=true");
             else
                 $ss->goToPaypal($ss_order['id'], $ss_order['total'], $_POST);
         }
@@ -65,7 +65,7 @@ if($success) {
     // Get form data
     $uniqueID = $_REQUEST['uid'];
     $freelunch = $_GET['freelunch'];
-    $sendEmail = $_REQUEST['em'];
+    $sendEmail = ($_REQUEST['sendemail'] == 'true' || isset($_REQUEST['payment_status']));
 
     // Validation
     if (!empty($uniqueID)) {
@@ -84,7 +84,7 @@ if($success) {
         $msg = get_receipt($menus, $receipt, $freelunch);
 
         // Send Emails
-        if ($user_paid && $sendEmail == 'true') {
+        if ($user_paid && $sendEmail) {
             $headers = 'From: ' . 'no-reply@' . $_SERVER['HTTP_HOST'] . "\r\n";
             $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
             $fullname = $receipt[0]['user-first-name'] . " " . $receipt[0]['user-last-name'];
@@ -99,9 +99,6 @@ if($success) {
             foreach ($organizers as $organizer) {
                 mail($organizer['name'].' <'.$organizer['email'].'>', 'Hot Lunch Order Alert', $alert_msg, $headers);
             }
-
-            // Testing for Kevin
-            mail('Kevin Vess <kevin@vess.me>', 'Hot Lunch Order Alert', $alert_msg, $headers);
         }
     }
     else

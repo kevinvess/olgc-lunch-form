@@ -224,8 +224,8 @@ class Google_Spreadsheet
 		}
 		
 		$paypal_data['amount'] = substr($total, 1);
-		$paypal_data['return'] = "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'] . "?uid=" . $uid . "&em=true";
-		$paypal_data['notify_url'] = "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'] . "?uid=".$uid;
+		$paypal_data['return'] = "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'] . "?uid=" . $uid;
+		//$paypal_data['notify_url'] = "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'] . "?uid=".$uid;
 		
 		$result = "?return=" . $paypal_data['return'];
 		foreach($paypal_data as $key => $value) {
